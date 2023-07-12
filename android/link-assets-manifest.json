@@ -1,0 +1,17 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/assets/fonts/FontsFree-Net-URW-DIN-Arabic-1.ttf",
+      "sha1": "e44b0dd840bef995144a93ab387a45f8b59d9935"
+    },
+    {
+      "path": "src/assets/fonts/FontsFree-Net-URW-DIN-Arabic-Bold-1.ttf",
+      "sha1": "b1c6251b4e88b15a094c57cb52dd40863260f43a"
+    },
+    {
+      "path": "src/assets/fonts/Heebo-Bold.ttf",
+      "sha1": "d2bf5f57ad79dbd4b77c6af716148f2b95ac8bdc"
+    }
+  ]
+}
