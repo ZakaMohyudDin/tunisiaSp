@@ -24,7 +24,7 @@ const SPItem = ({
       <TouchableOpacity
         disabled={disable}
         onLongPress={longPress}
-        onPress={onPress}
+        onPress={(onPress)}
       >
         <View
           style={[
@@ -48,12 +48,13 @@ const SPItem = ({
           <View style={{ justifyContent: "center" }}>
             <View style={styles.listName}>
               <View style={{ flexDirection: "row" }}>
-                <Picture
-                  localSource={require("../assets/checked.png")}
-                  height={normalize(3.5)}
-                  width={normalize(3.5)}
-                  imgColor={colors.primary_color}
-                />
+                {item.UserService?.isVerified ?
+                  <Picture
+                    localSource={require("../assets/checked.png")}
+                    height={normalize(3.5)}
+                    width={normalize(3.5)}
+                    imgColor={colors.primary_color}
+                  /> : null}
                 <View style={{ width: 2 }} />
 
                 <Paragraph
@@ -101,10 +102,10 @@ const SPItem = ({
                   ratingBackgroundColor={colors.main_background}
                   tintColor={colors.white}
                   readonly
-                  startingValue={5}
+                  startingValue={item.UserService?.userServiceRate}
                   onFinishRating={this.ratingCompleted}
                 />
-                <Paragraph text={"(216)"} />
+                <Paragraph text={item.UserService?.userServiceNumberReviews} />
               </View>
               {!offer ? (
                 <Paragraph

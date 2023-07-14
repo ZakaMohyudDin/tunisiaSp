@@ -19,6 +19,7 @@ export const validateEmail = (email) => {
 };
 
 export const notificationFarmater = (notifications) => {
+  console.log('sent_notifcations', notifications);
   const endOfWeek = moment().endOf("week");
   const currentDate = moment(); // Get the current date
   const sevenDaysAgo = currentDate.subtract(7, "days");
@@ -33,7 +34,7 @@ export const notificationFarmater = (notifications) => {
   var weekNotification = notifications.filter((item) =>
     moment(item.createdAt).isBetween(sevenDaysAgo, endOfWeek, null, "[]")
   );
-
+  //console.log('weeeeeek', weekNotification);
   var notification = [
     {
       isLongPress: false,
@@ -65,4 +66,26 @@ export const notificationFarmater = (notifications) => {
   ];
   console.log("\n\n\n\n ==> todayNotification : ", notification[0].result);
   return notification;
+};
+
+export const policiesFarmater = (policies) => {
+  var farmatedPolicies = [];
+  for (let i = 0; i < policies.length; i++) {
+    var obj = {
+      id: policies[i].id,
+      isLongPress: false,
+      width: 85,
+      padding: 2,
+      isShow: true,
+      ques: policies[i].usagePolicyQuestion,
+      ans: [policies[i].usagePolicyResponse],
+      languageCode: policies[i].languageCode,
+      isActive: policies[i].isActive,
+      isDeleted: policies[i].isDeleted,
+      createdAt: policies[i].createdAt,
+      updatedAt: policies[i].updatedAt,
+    };
+    farmatedPolicies.push(obj);
+  }
+  return farmatedPolicies;
 };

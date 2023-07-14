@@ -24,6 +24,15 @@ import BlurScreen from "../../components/BlurScreen";
 import SubHeading from "../../components/SubHeading";
 const windowHeight = Dimensions.get("window").height;
 import MemberComponent from "../../components/MemberComponent";
+import { getUserContact } from "../../redux/actions/userContactsAction";
+import { useFocusEffect } from "@react-navigation/native";
+import { getUsersMessages } from "../../redux/actions/usersMessagesAction";
+import moment from "moment";
+
+
+
+
+
 
 const DATA = [
   {
@@ -109,6 +118,10 @@ const DATA = [
 ];
 const ChatMembers = ({ navigation }) => {
   const { isBlur, token } = useSelector(({ authReducer }) => authReducer);
+  const { userContacts } = useSelector(({ userContactReducer }) => userContactReducer);
+  const { usersMessages } = useSelector(({ usersMessagesReducer }) => usersMessagesReducer);
+
+
   const [widthonLP, setWidthonLP] = useState(80);
   const [paddingonLP, setPaddingonLP] = useState(2);
   const [seletedItem, setSeletedItem] = useState("");
@@ -118,6 +131,35 @@ const ChatMembers = ({ navigation }) => {
   const dispatch = useDispatch();
 
   const componentRef = useRef(null);
+
+
+  /////////
+  /////////
+
+
+
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log('requested');
+      dispatch(getUserContact());
+      dispatch(getUsersMessages());
+
+    }, [])
+  );
+  useEffect(() => {
+    console.log('messages', usersMessages);
+  }, [usersMessages]);
+
+
+
+
+  //////////////
+  //////////////////
+
+
+
+
+
 
   const handleMeasure = () => {
     componentRef.current.measure((x, y, width, height, pageX, pageY) => {
@@ -158,9 +200,10 @@ const ChatMembers = ({ navigation }) => {
     }
   };
 
-  const Item = ({ title }) => (
+  const Item = ({ title, item }) => (
     <TouchableOpacity
-      disabled={isBlur ? true : false}
+      onPress={() => navigation.navigate("ChatScreen", { chatUser: item })}
+      // disabled={isBlur ? true : false}
       style={[styles.item, { opacity: isBlur ? 0.1 : 1 }]}
     >
       <Picture
@@ -181,10 +224,10 @@ const ChatMembers = ({ navigation }) => {
 
   const ItemMember = ({ title, item, index }) => (
     <TouchableOpacity
-      disabled={item.opacity !== 0.99 ? true : false}
-      onPress={() => navigation.navigate("ChatScreen")}
+      // disabled={item.opacity !== 0.99 ? true : false}
+      onPress={() => navigation.navigate("ChatScreen", { chatUser: item })}
       onLongPress={() => isLongPress(index, item)}
-      // ref={componentRef}
+    // ref={componentRef}
     >
       <View
         style={[
@@ -218,22 +261,22 @@ const ChatMembers = ({ navigation }) => {
         <View style={{ justifyContent: "center" }}>
           <View style={styles.listName}>
             <Paragraph
-              text={mltiLanguages("arabic").register}
+              text={title}
               color={colors.black}
               weight={"600"}
             />
-            <Paragraph text={"1m ago"} fontSize={normalize(2.5)} />
+            <Paragraph text={moment(item.createdAt).fromNow()} fontSize={normalize(2.5)} />
           </View>
           <Spacer height={normalize(1.5)} />
           <View style={{ flexDirection: "row" }}>
             <Paragraph
-              text={mltiLanguages("arabic").login_subtitle}
+              text={item.userMessageText}
               textAlign={"left"}
               fontSize={12}
             />
-            {item.sms && (
+            {item.userMessageUnread && (
               <View style={styles.unreadSms}>
-                <Text style={styles.unreadSmsCount}>3</Text>
+                <Text style={styles.unreadSmsCount}>{item.userMessageUnreadNumber}</Text>
               </View>
             )}
           </View>
@@ -339,7 +382,7 @@ const ChatMembers = ({ navigation }) => {
           <Headers openDrawer={() => navigation.openDrawer()} />
           <Spacer height={normalize(1)} />
           <SubHeading
-            text={"Online friend"}
+            text={"Online friends"}
             fontSize={normalize(4.5)}
             weight={"600"}
             textAlign={"left"}
@@ -347,23 +390,25 @@ const ChatMembers = ({ navigation }) => {
           />
           <Spacer height={normalize(1)} />
         </View>
+
         <FlatList
-          data={DATA}
+          data={userContacts}
           horizontal
-          renderItem={({ item }) => <Item title={item.title} />}
+          renderItem={({ item }) => <Item item={item} title={item?.User?.userName} />}
           keyExtractor={(item) => item.id}
         />
+
         <FlatList
-          data={memberList}
+          data={usersMessages}
           ref={componentRef}
           renderItem={({ item, index }) => (
-            <ItemMember title={item.title} item={item} index={index} />
+            <ItemMember title={item?.User?.userName} item={item} index={index} />
           )}
           keyExtractor={(item) => item.id}
           style={{ maxHeight: "66%", paddingBottom: 10 }}
         />
         {false && (
-          <View style={{position:'absolute', top:0, bottom: 0, left: 0, right: 0}}>
+          <View style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }}>
             <BlurScreen>
               {/* <MemberComponent item={seletedItem} /> */}
             </BlurScreen>

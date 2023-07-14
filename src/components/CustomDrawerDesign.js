@@ -5,11 +5,19 @@ import Picture from "./Picture";
 import { normalize } from "../utils/helper";
 import Spacer from "./Spacer";
 import { colors } from "../utils/colors";
+import { useDispatch } from "react-redux";
 
 const CustomDrawerContent = ({ state, descriptors, navigation }) => {
+
+  const dispatch = useDispatch();
+  const logOutUser = () => {
+    // dispatch({ type: TOKEN, data: response?.data?.access_token });
+
+  }
+
   return (
     <View style={styles.container}>
-      <Spacer height={normalize(28)} />
+      <Spacer height={normalize(18)} />
       <Picture
         localSource={require("../assets/testimonials-5.jpg")}
         height={normalize(20)}
@@ -205,6 +213,26 @@ const CustomDrawerContent = ({ state, descriptors, navigation }) => {
         <View style={{ width: normalize(3) }} />
         <SubHeading
           text={"Settings"}
+          fontSize={normalize(4.2)}
+          weight={"600"}
+          textAlign={"left"}
+          fontFamily={"FontsFree-Net-URW-DIN-Arabic-1"}
+        />
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.drawerItem}
+        onPress={() => logOutUser()}
+      >
+        <Picture
+          localSource={require("../assets/icon_log_out.png")}
+          height={normalize(6)}
+          width={normalize(6)}
+          imgColor={colors.dark_gray}
+        />
+        <View style={{ width: normalize(3) }} />
+        <SubHeading
+          text={"Log Out"}
           fontSize={normalize(4.2)}
           weight={"600"}
           textAlign={"left"}

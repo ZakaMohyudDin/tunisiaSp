@@ -30,7 +30,7 @@ let optionsPick = {
   durationLimit: 3,
   videoQuality: "high",
 };
-const ChatScreen = ({ navigation }) => {
+const ChatScreen = ({ navigation, route }) => {
   const { isDor } = useSelector(({ serviceReducer }) => serviceReducer);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
@@ -39,6 +39,7 @@ const ChatScreen = ({ navigation }) => {
   const [imgModal, setImgModal] = useState(false);
   const [videoModal, setVideoModal] = useState(false);
   const [imgUrl, setImgUrl] = useState("");
+  const [chatUser, setChatUser] = useState(route.params.chatUser);
 
   const handleSend = (val, url) => {
     if (val == "img") {
@@ -134,7 +135,7 @@ const ChatScreen = ({ navigation }) => {
             text={"Sun, 14:34"}
             fontSize={normalize(2)}
             textAlign={item.sender ? "right" : "left"}
-            // color={colors.dark_gray}
+          // color={colors.dark_gray}
           />
         </View>
         {item.img && (
@@ -237,7 +238,7 @@ const ChatScreen = ({ navigation }) => {
               videoWidth={500}
               videoHeight={300}
               thumbnail={require("../../assets/add1.png")}
-              // Other video player props
+            // Other video player props
             />
           </View>
         )}
@@ -271,7 +272,7 @@ const ChatScreen = ({ navigation }) => {
             alignItems: "center",
           }}
         >
-          <TouchableOpacity onPress={()=> navigation.goBack()}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
             <Picture
               localSource={require("../../assets/backArrow.png")}
               height={normalize(5)}
@@ -299,7 +300,7 @@ const ChatScreen = ({ navigation }) => {
           >
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Paragraph
-                text={mltiLanguages("arabic").cart}
+                text={chatUser.User.userName}
                 color={colors.dark_gray}
               />
               <View style={{ width: 4 }} />

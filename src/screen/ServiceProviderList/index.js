@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { FlatList, TouchableOpacity, View} from "react-native";
+import React, { useEffect, useState } from "react";
+import { FlatList, TouchableOpacity, View } from "react-native";
 import { normalize } from "../../utils/helper";
 import Spacer from "../../components/Spacer";
 import { mltiLanguages } from "../../utils/multiLanguage";
@@ -11,6 +11,9 @@ import Picture from "../../components/Picture";
 import { Rating } from "react-native-elements";
 import SPItem from "../../components/SPItem";
 import SubHeading from "../../components/SubHeading";
+import { useFocusEffect } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllServices } from "../../redux/actions/servicesActions";
 
 const DATA = [
   {
@@ -79,13 +82,37 @@ const DATA = [
   },
 ];
 const ServiceProviderList = ({ navigation }) => {
+
+
+  const dispatch = useDispatch();
+  const { services } = useSelector(
+    ({ servicesReducer }) => servicesReducer
+  );
   const [showMenu, setShowMenue] = useState(false);
   const [spList, setSpList] = useState(DATA);
   const [opacityTogle, setOpacityTogle] = useState(1);
 
+
   const ratingCompleted = (rating) => {
     console.log("Rating is: " + rating);
   };
+
+
+  useEffect(() => {
+    console.log('services_mm', services);
+    if (services?.length) {
+
+    }
+  }, [services]);
+
+
+
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log('requested');
+      dispatch(getAllServices());
+    }, [])
+  );
 
   const openMenu = (index) => {
     var updateList = spList;
@@ -94,6 +121,8 @@ const ServiceProviderList = ({ navigation }) => {
     setSpList([...updateList]);
     setOpacityTogle(0.1);
   };
+
+
   const navigateToTutorial = () => {
     navigation.navigate("TutorialSP");
     var updateList = spList;
@@ -101,16 +130,23 @@ const ServiceProviderList = ({ navigation }) => {
     setSpList([...updateList]);
     setOpacityTogle(1);
   };
+
+
+
+
+
+
   const Item = ({ item, index }) => (
     <SPItem
       item={item}
       offer={true}
       menuNavigate={() => navigateToTutorial()}
-      disable={item.opacity == 0.99 ? false : true}
+      // disable={item.opacity == 0.99 ? false : true}
+      disable={false}
       color={colors.white}
       longPress={() => openMenu(index)}
       opacity={item.opacity}
-      onPress={() => navigation.navigate("ServiceProviderDetail")}
+      onPress={() => { navigation.navigate("ServiceProviderDetail", { serviceItem: item }) }}
     />
   );
   return (
@@ -154,7 +190,7 @@ const ServiceProviderList = ({ navigation }) => {
         <Spacer height={normalize(2)} />
       </View>
       <FlatList
-        data={spList}
+        data={services}
         renderItem={({ item, index }) => <Item item={item} index={index} />}
         keyExtractor={(item) => item.id}
         style={{ paddingBottom: 10 }}

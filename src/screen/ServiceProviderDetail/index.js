@@ -71,8 +71,14 @@ const DATA = [
     padding: 2,
   },
 ];
-const ServiceProviderDetail = ({ navigation }) => {
+const ServiceProviderDetail = ({ navigation, route }) => {
   const [loader, setLoader] = useState(false);
+  const [serviceItem, setServiceItem] = useState(route.params.serviceItem);
+  console.log('serviceItem', route.params.serviceItem);
+
+
+
+
   const Item = ({ item }) => (
     <View style={styles.flatImgStyle}>
       <Picture
@@ -124,20 +130,14 @@ const ServiceProviderDetail = ({ navigation }) => {
         </TouchableOpacity>
       </View>
       <SPItem
-        item={{
-          id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
-          title: mltiLanguages("arabic").login,
-          isLongPress: false,
-          width: 85,
-          padding: 1,
-        }}
+        item={serviceItem}
         offer={true}
         color={colors.main_background}
       />
-      <View style={{marginLeft: normalize(4)}}>
+      <View style={{ marginLeft: normalize(4) }}>
         <SubHeading
           text={
-            "Hsoub is a technology company on a mission to develop the Arab world"
+            serviceItem?.UserService?.userServiceLongDescription
           }
           fontSize={normalize(4.2)}
           weight={"600"}
@@ -156,14 +156,14 @@ const ServiceProviderDetail = ({ navigation }) => {
       />
       <Spacer height={normalize(2)} />
       <SubHeading
-          text={
-            "Demonstration video"
-          }
-          fontSize={normalize(4.2)}
-          weight={"600"}
-          textAlign={"left"}
-          fontFamily={"FontsFree-Net-URW-DIN-Arabic-1"}
-        />
+        text={
+          "Demonstration video"
+        }
+        fontSize={normalize(4.2)}
+        weight={"600"}
+        textAlign={"left"}
+        fontFamily={"FontsFree-Net-URW-DIN-Arabic-1"}
+      />
       <Spacer height={normalize(3)} />
       <VideoPlayer height={normalize(50)} />
       <Spacer height={normalize(3)} />

@@ -15,3 +15,15 @@ export const SERVICE_TYPE_ID = "SERVICE_TYPE_ID";
 export const NOTIFICATION = "NOTIFICATION";
 export const ORDER = "ORDER";
 export const ORDER_TYPE = "ORDER_TYPE";
+export const CONTACT_US = "CONTACT_US";
+export const USER_CONTACTS = "USER_CONTACTS";
+export const USERS_MESSAGES = "USERS_MESSAGES";
+export const USAGE_POLICY = "USAGE_POLICY";
+export const ABOUT_US = "ABOUT_US";
+export const SERVICES = "SERVICES";
+
+
+
+
+
+

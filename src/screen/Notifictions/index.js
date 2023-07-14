@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, SectionList, FlatList } from "react-native";
-import { normalize } from "../../utils/helper";
+import { normalize, notificationFarmater } from "../../utils/helper";
 import Spacer from "../../components/Spacer";
 import { mltiLanguages } from "../../utils/multiLanguage";
 import { styles } from "./styles";
@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getNotification } from "../../redux/actions/notificationAction";
 import ScreenLoader from "../../components/ScreenLoader";
 import { useFocusEffect } from "@react-navigation/native";
+import moment from "moment";
 
 const DATA = [
   {
@@ -88,8 +89,22 @@ const Notifictaion = ({ navigation }) => {
     setPoliceisList([...policiesData]);
   };
 
+
+  useEffect(() => {
+    console.log('notifcation', notifications);
+    if (notifications?.length) {
+      let finalNotifcations = notificationFarmater(notifications);
+      setPoliceisList(finalNotifcations);
+      console.log('notificatin_reducer', finalNotifcations);
+    }
+
+
+
+  }, [notifications]);
+
   useFocusEffect(
     React.useCallback(() => {
+      console.log('requested');
       dispatch(getNotification());
     }, [])
   );
@@ -157,7 +172,7 @@ const Notifictaion = ({ navigation }) => {
                     color={colors.black}
                     weight={"600"}
                   />
-                  <Paragraph text={"1m ago"} fontSize={normalize(2.5)} />
+                  <Paragraph text={moment(item.createdAt).fromNow()} fontSize={normalize(2.5)} />
                 </View>
                 <Spacer height={normalize(1.5)} />
                 <Paragraph

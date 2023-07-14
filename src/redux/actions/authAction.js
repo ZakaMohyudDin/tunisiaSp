@@ -74,7 +74,7 @@ export function getRolesAction(callback) {
           callback(roleId);
         }
       },
-      (error) => {}
+      (error) => { }
     );
   };
 }
@@ -104,7 +104,7 @@ export function getSlidersAction(sliderType, callback) {
             }
           }
         },
-        (error) => {}
+        (error) => { }
       );
   };
 }

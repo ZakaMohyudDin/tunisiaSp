@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { ScrollView } from "react-native";
 import { normalize } from "../../utils/helper";
 import Spacer from "../../components/Spacer";
@@ -11,8 +11,31 @@ import Headers from "../../components/Headers";
 import SubHeading from "../../components/SubHeading";
 import ContactInfoBox from "../../components/ContactInfoBox";
 import Input from "../../components/Input";
+import { useFocusEffect } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
+import { getContactUsInfo } from "../../redux/actions/contactUsAction";
 
 const ContactUs = ({ navigation }) => {
+  const { contactUsInfo } = useSelector(({ contactUsReducer }) => contactUsReducer);
+
+  const dispatch = useDispatch();
+
+
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log('requested');
+      dispatch(getContactUsInfo());
+    }, [])
+  );
+  useEffect(() => {
+    console.log('contactUsInfo', contactUsInfo);
+
+
+
+
+  }, [contactUsInfo]);
+
+
   return (
     <ScrollView
       style={{
@@ -35,7 +58,7 @@ const ContactUs = ({ navigation }) => {
       <Paragraph
         text={mltiLanguages("arabic").slide_desc}
         textAlign={"center"}
-        // fontSize={normalize(4)}
+      // fontSize={normalize(4)}
       />
 
       <Spacer height={normalize(6)} />
@@ -55,7 +78,7 @@ const ContactUs = ({ navigation }) => {
       <Spacer height={normalize(4)} />
       <ContactInfoBox
         text={mltiLanguages("arabic").register}
-        contact={"example@gmail.com"}
+        contact={contactUsInfo ? contactUsInfo[0].contactValue : ""}
         img={require("../../assets/mail.png")}
       />
 

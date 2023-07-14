@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { ScrollView, View } from "react-native";
+import { FlatList, ScrollView, View } from "react-native";
 import { normalize } from "../../utils/helper";
 import Spacer from "../../components/Spacer";
 import { mltiLanguages } from "../../utils/multiLanguage";
@@ -7,8 +7,58 @@ import { styles } from "./styles";
 import Paragraph from "../../components/Paragraph";
 import { colors } from "../../utils/colors";
 import Headers from "../../components/Headers";
+import { useFocusEffect } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
+import { getAboutUs } from "../../redux/actions/aboutUsAction";
 
 const AboutScreen = ({ navigation }) => {
+
+  const dispatch = useDispatch();
+  const { about_us } = useSelector(
+    ({ aboutUsReducer }) => aboutUsReducer
+  );
+
+
+
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log('requested');
+      dispatch(getAboutUs());
+    }, [])
+  );
+
+  useEffect(() => {
+    console.log('aboutUsMM', about_us);
+
+  }, [about_us]);
+
+
+  const Item = ({ item, index }) => (
+    <View>
+      <Paragraph
+        text={item.applicationTitle}
+        textAlign={"left"}
+        color={colors.dark_gray}
+        fontSize={normalize(4.2)}
+      />
+      <Spacer height={normalize(1)} />
+      <Paragraph
+        text={item.applicationShortText}
+        textAlign={"left"}
+        color={colors.dark_gray}
+        fontSize={normalize(4.0)}
+      />
+      <Paragraph
+        text={item.applicationAbout}
+        textAlign={"left"}
+        color={colors.dark_gray}
+        fontSize={normalize(3.6)}
+      />
+      <Spacer height={normalize(8)} />
+    </View>
+  );
+
+
   return (
     <ScrollView
       style={{
@@ -19,26 +69,14 @@ const AboutScreen = ({ navigation }) => {
     >
       <Headers addService={true} openDrawer={() => navigation.openDrawer()} />
 
-      <View style={{paddingHorizontal: normalize(2)}}>
-        <Paragraph
-          text={"من نحن؟"}
-          textAlign={"left"}
-          color={colors.dark_gray}
-          fontSize={normalize(4)}
+      <View style={{ paddingHorizontal: normalize(2) }}>
+        <FlatList
+          data={about_us}
+          renderItem={({ item, index }) => <Item item={item} index={index} />}
+          keyExtractor={(item) => item.id}
+          style={{ paddingBottom: 10 }}
         />
-        <Spacer height={normalize(8)}/>
-        <Paragraph
-          text={"من نحن؟"}
-          textAlign={"left"}
-          color={colors.dark_gray}
-          fontSize={normalize(3.8)}
-        />
-        <Paragraph
-          text={mltiLanguages("arabic").slide_desc + mltiLanguages("arabic").slide_desc}
-          textAlign={"left"}
-          color={colors.dark_gray}
-          fontSize={normalize(3.8)}
-        />
+
       </View>
     </ScrollView>
   );
