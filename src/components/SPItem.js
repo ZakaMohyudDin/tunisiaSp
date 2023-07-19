@@ -24,7 +24,7 @@ const SPItem = ({
       <TouchableOpacity
         disabled={disable}
         onLongPress={longPress}
-        onPress={(onPress)}
+        onPress={onPress}
       >
         <View
           style={[
@@ -49,11 +49,11 @@ const SPItem = ({
             <View style={styles.listName}>
               <View style={{ flexDirection: "row" }}>
                 {item.UserService?.isVerified ?
-                  <Picture
-                    localSource={require("../assets/checked.png")}
-                    height={normalize(3.5)}
-                    width={normalize(3.5)}
-                    imgColor={colors.primary_color}
+                <Picture
+                  localSource={require("../assets/checked.png")}
+                  height={normalize(3.5)}
+                  width={normalize(3.5)}
+                  imgColor={colors.primary_color}
                   /> : null}
                 <View style={{ width: 2 }} />
 

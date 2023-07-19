@@ -12,7 +12,12 @@ import SubHeading from "../../components/SubHeading";
 import LinearGradient from "react-native-linear-gradient";
 import Paragraph from "../../components/Paragraph";
 import Slider from "../../components/Slider";
-import { getCategory, setDarkTheme } from "../../redux/actions/serviceAction";
+import {
+  getCategory,
+  setDarkTheme,
+  setRole,
+  getUserTypeId,
+} from "../../redux/actions/serviceAction";
 import { useDispatch, useSelector } from "react-redux";
 import ModalComponent from "../../components/ModalComponent";
 import { setThemeValue } from "../../utils/colors";
@@ -70,28 +75,46 @@ const imagList = [
 ];
 const Home = ({ navigation, route }) => {
   const dispatch = useDispatch();
-  const { token, homeSlider, currentUser, serviceTypeId } = useSelector(
+  const { token, homeSlider, currentUser } = useSelector(
     ({ authReducer }) => authReducer
   );
   const { orderList } = useSelector(({ orderReducers }) => orderReducers);
-  const { categoryList, subCategoryList, isDark, isDor } = useSelector(
-    ({ serviceReducer }) => serviceReducer
-  );
+  const { categoryList, subCategoryList, isDark, isDor, userTypeId } =
+    useSelector(({ serviceReducer }) => serviceReducer);
   const [modalVisible, setModalVisible] = useState(false);
+  const [loader, setLoader] = useState(false);
 
   useEffect(() => {
     dispatch(getCategory(token, isDor.id));
-    dispatch(getOrders(serviceTypeId));
+    dispatch(getOrders(userTypeId));
     dispatch(getSlidersAction("home"));
     // dispatch(setDarkTheme(false))
     // setThemeValue(true)
   }, []);
+
+  const setRoleFN = (isRole, id) => {
+    setLoader(true);
+    var role = {
+      role: isRole,
+      id: id,
+    };
+    dispatch(setRole(role));
+    var data = {
+      userId: currentUser?.id,
+      userTypeParent: null,
+      typeId: id,
+    };
+
+    dispatch(
+      getUserTypeId(token, data, () => {
+        setLoader(false);
+        navigation.navigate("SubCategory", { categoryId: id });
+      })
+    );
+  };
+
   const Item = ({ item, index }) => (
-    <TouchableOpacity
-      onPress={() =>
-        navigation.navigate("SubCategory", { categoryId: item.id })
-      }
-    >
+    <TouchableOpacity onPress={() => setRoleFN(item.isRemote, item.id)}>
       {index % 2 == 0 ? (
         <LinearGradient
           style={styles.item}

@@ -17,7 +17,7 @@ const CustomDrawerContent = ({ state, descriptors, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Spacer height={normalize(18)} />
+      <Spacer height={normalize(28)} />
       <Picture
         localSource={require("../assets/testimonials-5.jpg")}
         height={normalize(20)}

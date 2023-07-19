@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getCategory } from "../../redux/actions/serviceAction";
 import { useFocusEffect } from "@react-navigation/native";
 import ScreenLoader from "../../components/ScreenLoader";
+import { getUserTypeId } from "../../redux/actions/serviceAction";
 
 const DATA = [
   {
@@ -62,7 +63,7 @@ const ServiceType = ({ navigation }) => {
     };
 
     dispatch(
-      setUserType(token, data, () => {
+      getUserTypeId(token, data, () => {
         setLoader(false);
         navigation.navigate("TopTab");
       })

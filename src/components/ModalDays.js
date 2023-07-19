@@ -41,9 +41,9 @@ var DATA = [
   },
 ];
 
-const ModalDays = ({ visible, onClose, storDays }) => {
+const ModalDays = ({ visible, onClose, storDays, days, storeDaysIds }) => {
   const position = useRef(new Animated.Value(0)).current;
-  const [daysList, setDaysList] = useState(DATA);
+  const [daysList, setDaysList] = useState(days);
 
   useEffect(() => {
     if (visible) {
@@ -66,8 +66,13 @@ const ModalDays = ({ visible, onClose, storDays }) => {
     setDaysList([...daysData]);
     var selectedday = daysData
       .filter((obj) => obj.isSelected == true)
-      .map((obj) => obj.day);
-    console.log(selectedday);
+      .map((obj) => obj.daysName);
+
+      var selecteddayId = daysData
+      .filter((obj) => obj.isSelected == true)
+      .map((obj) => obj.id);
+    console.log(selecteddayId);
+    storeDaysIds(selecteddayId)
     storDays(selectedday.join(" ' "));
   };
 
@@ -82,7 +87,7 @@ const ModalDays = ({ visible, onClose, storDays }) => {
         }}
       >
         <Paragraph
-          text={item.day}
+          text={item.daysName}
           textAlign={"left"}
           color={colors.dark_gray}
           fontSize={normalize(3.7)}

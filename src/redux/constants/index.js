@@ -21,9 +21,8 @@ export const USERS_MESSAGES = "USERS_MESSAGES";
 export const USAGE_POLICY = "USAGE_POLICY";
 export const ABOUT_US = "ABOUT_US";
 export const SERVICES = "SERVICES";
-
-
-
-
-
-
+export const SERVICE_TYPES = "SERVICE_TYPES";
+export const USER_SERVICE_RESPONSE = "USER_SERVICE_RESPONSE";
+export const AVAILABLE_DAYS = "AVAILABLE_DAYS";
+export const CITIES = "CITIES";
+export const USER_TYPE_ID = "USER_TYPE_ID";

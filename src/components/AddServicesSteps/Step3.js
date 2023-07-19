@@ -7,17 +7,50 @@ import Paragraph from "../Paragraph";
 import ImagePicker from "react-native-image-crop-picker";
 import Picture from "../Picture";
 import Spacer from "../Spacer";
+import Button from "../Button";
+import { RNS3 } from "react-native-aws3";
+import { generateUID } from "../../utils/helper";
 
-const Step3 = ({ text }) => {
+const Step3 = ({ text, onNextPress, onPrePress, setImagUrl }) => {
   const [images, setImages] = useState();
 
   const pickImage = () => {
     ImagePicker.openPicker({
       multiple: true,
     }).then((images) => {
+      console.log(images[0].path);
       setImages(images);
+      uploadImageToS3(images[0].path);
     });
   };
+
+  // upload image to S3
+  function uploadImageToS3(uri) {
+    const file = {
+      uri: uri,
+      name: generateUID() + ".jpg",
+      type: "image/jpeg",
+    };
+    const options = {
+      keyPrefix: "temp/mehna",
+      bucket: "medical-globe",
+      region: "ap-southeast-1",
+      accessKey: "AKIAUVWYCSDKBR2UK473",
+      secretKey: "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",
+      successActionStatus: 201,
+    };
+    console.log("options : ", options);
+    RNS3.put(file, options).then((response) => {
+      if (response.status !== 201) {
+        throw new Error("Failed to upload image to S3");
+        return;
+      } else {
+        console.log("\n\n\n\n\n  s3", response?.body?.postResponse?.location);
+        setImagUrl(response?.body?.postResponse?.location)
+      }
+    });
+  }
+
   const Item = ({ item }) => (
     <View style={{ margin: normalize(4) }}>
       <Picture
@@ -67,6 +100,29 @@ const Step3 = ({ text }) => {
         fontSize={12}
         textAlign={"left"}
       />
+
+      <View style={styles.btnContainers}>
+        <Button
+          onPress={onNextPress}
+          height={50}
+          width={100}
+          text={mltiLanguages("arabic").profile}
+          gradiantFirst={colors.primary_color}
+          gradiantSecond={colors.primary_color}
+          //   loader={loader}
+        />
+
+        <Button
+          onPress={onPrePress}
+          height={50}
+          width={100}
+          text={mltiLanguages("arabic").profile}
+          textColor={colors.dark_gray}
+          gradiantFirst={"#EAE4FB"}
+          gradiantSecond={"#EAE4FB"}
+          //   loader={loader}
+        />
+      </View>
     </View>
   );
 };
@@ -100,5 +156,11 @@ const styles = StyleSheet.create({
     shadowRadius: 1.41,
 
     elevation: 2,
+  },
+  btnContainers: {
+    flexDirection: "row",
+    marginTop: normalize(10),
+    marginBottom: normalize(4),
+    justifyContent: "space-between",
   },
 });
