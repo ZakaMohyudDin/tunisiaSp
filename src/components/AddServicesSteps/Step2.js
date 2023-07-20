@@ -9,84 +9,75 @@ import Paragraph from "../Paragraph";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Spacer from "../Spacer";
 import ModalDays from "../ModalDays";
+import Button from "../Button";
+import moment from "moment";
 
-const Step2 = ({ text }) => {
-  const [selectedLanguage, setSelectedLanguage] = useState();
-  const [Time, setTime] = useState("");
-  const [date, setDate] = useState("");
+const Step2 = ({
+  text,
+  onNextPress,
+  onPrePress,
+  days,
+  selectedDaysToReturn,
+  returnSelectedDaysId,
+  setFromTimeReturn,
+  setToTimeReturn,
+  cities,
+  setSelectedCity,
+  selectedCity,
+}) => {
+  const [toTime, setToTime] = useState([]);
+  const [fromTime, setFromTime] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedDays, setSelectedDays] = useState("الایام");
 
+  const [isToTimePickerVisible, setToTimePickerVisibility] = useState(false);
+  const [isFromTimePickerVisible, setFromTimePickerVisibility] =
+    useState(false);
+  const hideFromTimePicker = () => {
+    setFromTimePickerVisibility(false);
+  };
+  const showFromTimePicker = () => {
+    setFromTimePickerVisibility(true);
+  };
+  const handleConfirmFromTime = (selectedDate) => {
+    setFromTime(+selectedDate);
+    setFromTimeReturn(+selectedDate);
+    hideFromTimePicker();
+  };
 
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
-  const hideDatePicker = () => {
-    setDatePickerVisibility(false);
-  };
-  const showDatePicker = () => {
-    setDatePickerVisibility(true);
-  };
-  const handleConfirmDate = (selectedDate) => {
-    setDate(selectedDate);
-    hideDatePicker();
-  };
-
-  const hideTimePicker = () => {
-    setTimePickerVisibility(false);
+  const hideToTimePicker = () => {
+    setToTimePickerVisibility(false);
   };
   const showTimePicker = () => {
-    setTimePickerVisibility(true);
+    setToTimePickerVisibility(true);
   };
-  const handleConfirmTime = (selectedDate) => {
-    setTime(selectedDate);
-    hideTimePicker();
+  const handleConfirmToTime = (selectedDate) => {
+    setToTime(+selectedDate);
+    setToTimeReturn(+selectedDate);
+    hideToTimePicker();
+  };
+
+  const returnSelectedDays = (res) => {
+    setSelectedDays(res);
+    selectedDaysToReturn(res);
+  };
+
+  const returnIdOfDays = (res) => {
+    returnSelectedDaysId(res);
   };
   return (
     <View>
-      {/* <View style={styles.uperBox}>
-        <View style={[styles.pick, {width: normalize(100)}]}>
-          <Picker
-            selectedValue={selectedLanguage}
-            onValueChange={(itemValue, itemIndex) =>
-              setSelectedLanguage(itemValue)
-            }>
-            <Picker.Item
-              label={mltiLanguages('arabic').phone}
-              value={mltiLanguages('arabic').phone}
-            />
-            <Picker.Item
-              label={mltiLanguages('arabic').register}
-              value={mltiLanguages('arabic').register}
-            />
-          </Picker>
-        </View>
-        <Paragraph text={mltiLanguages('arabic').phone} />
-        <View style={[styles.pick, {width: normalize(100)}]}>
-          <Picker
-            selectedValue={selectedLanguage}
-            onValueChange={(itemValue, itemIndex) =>
-              setSelectedLanguage(itemValue)
-            }>
-            <Picker.Item
-              label={mltiLanguages('arabic').phone}
-              value={mltiLanguages('arabic').phone}
-            />
-            <Picker.Item
-              label={mltiLanguages('arabic').register}
-              value={mltiLanguages('arabic').register}
-            />
-          </Picker>
-        </View>
-        <Paragraph text={mltiLanguages('arabic').phone} />
-      </View> */}
       <Spacer height={normalize(2)} />
       <Paragraph
         text={mltiLanguages("arabic").phone}
         textAlign={"left"}
         color={colors.dark_gray}
       />
-      <TouchableOpacity style={styles.daysStyles} onPress={()=> setModalVisible(true)}>
-        <Paragraph text={selectedDays} color={colors.dark_gray}/>
+      <TouchableOpacity
+        style={styles.daysStyles}
+        onPress={() => setModalVisible(true)}
+      >
+        <Paragraph text={selectedDays} color={colors.dark_gray} />
       </TouchableOpacity>
       <View style={styles.uperBox}>
         <Paragraph text={mltiLanguages("arabic").phone} />
@@ -95,7 +86,7 @@ const Step2 = ({ text }) => {
           style={styles.dateStyle}
         >
           <Paragraph
-            text={"08:45 Am"}
+            text={toTime ? moment(toTime).format("hh:mm A") : "08:45 Am"}
             weight={"700"}
             color={colors.subHeading}
           />
@@ -103,60 +94,78 @@ const Step2 = ({ text }) => {
 
         <Paragraph text={mltiLanguages("arabic").phone} />
         <TouchableOpacity
-          onPress={() => showTimePicker()}
+          onPress={() => showFromTimePicker()}
           style={styles.dateStyle}
         >
           <Paragraph
-            text={"08:45 Am"}
+            text={fromTime ? moment(fromTime).format("hh:mm A") : "08:45 Am"}
             weight={"700"}
             color={colors.subHeading}
           />
         </TouchableOpacity>
       </View>
 
-      <Input
+      {/* <Input
         bgColor={colors.white}
         width={"100%"}
         placeholder={mltiLanguages("arabic").phone}
         margin={normalize(6)}
-      />
+      /> */}
 
       <View style={styles.pick}>
         <Picker
-          selectedValue={selectedLanguage}
-          onValueChange={(itemValue, itemIndex) =>
-            setSelectedLanguage(itemValue)
-          }
+          selectedValue={selectedCity}
+          onValueChange={setSelectedCity}
         >
-          <Picker.Item
-            label={mltiLanguages("arabic").phone}
-            value={mltiLanguages("arabic").phone}
-          />
-          <Picker.Item
-            label={mltiLanguages("arabic").register}
-            value={mltiLanguages("arabic").register}
-          />
+          {cities.map((city) => (
+            <Picker.Item label={city?.addressCityName} value={city?.id} />
+          ))}
         </Picker>
       </View>
 
       <DateTimePickerModal
-        isVisible={isDatePickerVisible}
-        mode="date"
-        onConfirm={handleConfirmDate}
-        onCancel={hideDatePicker}
+        isVisible={isFromTimePickerVisible}
+        mode="time"
+        onConfirm={handleConfirmFromTime}
+        onCancel={hideFromTimePicker}
       />
       <DateTimePickerModal
-        isVisible={isTimePickerVisible}
+        isVisible={isToTimePickerVisible}
         mode="time"
-        onConfirm={handleConfirmTime}
-        onCancel={hideDatePicker}
+        onConfirm={handleConfirmToTime}
+        onCancel={hideToTimePicker}
       />
       {/* setMyState([...myState, newValue]); */}
-      <ModalDays 
-       visible={modalVisible}
-       storDays={(res)=>setSelectedDays(res)}
-       onClose={() => setModalVisible(false)}
+      <ModalDays
+        visible={modalVisible}
+        days={days}
+        storDays={(res) => returnSelectedDays(res)}
+        storeDaysIds={(res) => returnIdOfDays(res)}
+        onClose={() => setModalVisible(false)}
       />
+
+      <View style={styles.btnContainers}>
+        <Button
+          onPress={onNextPress}
+          height={50}
+          width={100}
+          text={mltiLanguages("arabic").profile}
+          gradiantFirst={colors.primary_color}
+          gradiantSecond={colors.primary_color}
+          //   loader={loader}
+        />
+
+        <Button
+          onPress={onPrePress}
+          height={50}
+          width={100}
+          text={mltiLanguages("arabic").profile}
+          textColor={colors.dark_gray}
+          gradiantFirst={"#EAE4FB"}
+          gradiantSecond={"#EAE4FB"}
+          //   loader={loader}
+        />
+      </View>
     </View>
   );
 };
@@ -191,11 +200,16 @@ const styles = StyleSheet.create({
   },
   daysStyles: {
     height: 48,
-    width: '100%',
+    width: "100%",
     backgroundColor: colors.white,
     borderRadius: 10,
-    justifyContent: 'center',
-    paddingHorizontal: 16
-
-  }
+    justifyContent: "center",
+    paddingHorizontal: 16,
+  },
+  btnContainers: {
+    flexDirection: "row",
+    marginTop: normalize(30),
+    marginBottom: normalize(4),
+    justifyContent: "space-between",
+  },
 });

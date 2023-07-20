@@ -7,7 +7,6 @@ import {
   WELCOME_SLIDER,
   WELCOME_TEXT,
   HOME_SLIDER,
-  SERVICE_TYPE_ID,
 } from "../constants";
 
 let initialState = {
@@ -48,11 +47,6 @@ export default (state = initialState, action) => {
       return {
         ...state,
         welcomeSlider: action.data,
-      };
-    case SERVICE_TYPE_ID:
-      return {
-        ...state,
-        serviceTypeId: action.data,
       };
     case HOME_SLIDER:
       return {

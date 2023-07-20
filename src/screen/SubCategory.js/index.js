@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { View, FlatList, TouchableOpacity } from "react-native";
 import { normalize } from "../../utils/helper";
 import Spacer from "../../components/Spacer";
@@ -9,7 +9,8 @@ import Headers from "../../components/Headers";
 import Picture from "../../components/Picture";
 import SubHeading from "../../components/SubHeading";
 import { useDispatch, useSelector } from "react-redux";
-import { getCategory } from "../../redux/actions/serviceAction";
+import { getCategory, setRole } from "../../redux/actions/serviceAction";
+import { getUserTypeId } from "../../redux/actions/serviceAction";
 
 const DATA = [
   {
@@ -40,16 +41,38 @@ const DATA = [
 
 const SubCategory = ({ navigation, route }) => {
   const dispatch = useDispatch();
-  const { token } = useSelector(({ authReducer }) => authReducer);
+  const { token, currentUser } = useSelector(({ authReducer }) => authReducer);
   const { subCategoryList, subSubCategory } = useSelector(
     ({ serviceReducer }) => serviceReducer
   );
+  const [loader, setLoader] = useState();
   useEffect(() => {
-    console.log("\n\n ==> route : ", subSubCategory);
     dispatch(getCategory(token, route?.params?.categoryId, true));
   }, []);
+
+  const setRoleFN = (isRole, id) => {
+    setLoader(true);
+    var role = {
+      role: isRole,
+      id: id,
+    };
+    dispatch(setRole(role));
+    var data = {
+      userId: currentUser?.id,
+      userTypeParent: null,
+      typeId: id,
+    };
+
+    dispatch(
+      getUserTypeId(token, data, () => {
+        setLoader(false);
+        navigation.navigate("AddServices", {typId : id});
+      })
+    );
+  };
+
   const Item = ({ item }) => (
-    <TouchableOpacity onPress={() => navigation.navigate("AddServices")}>
+    <TouchableOpacity onPress={() => setRoleFN(item.isRemote, item.id)}>
       <View style={styles.item}>
         <Spacer height={normalize(1)} />
         <Picture

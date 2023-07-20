@@ -24,11 +24,8 @@ export const SERVICES = "SERVICES";
 export const ALL_SUBSCRIPTIONS = "ALL_SUBSCRIPTIONS";
 export const SUBSCRIPTIONS = "SUBSCRIPTIONS";
 export const USER_PROFITS = "USER_PROFITS";
-
-
-
-
-
-
-
-
+export const SERVICE_TYPES = "SERVICE_TYPES";
+export const USER_SERVICE_RESPONSE = "USER_SERVICE_RESPONSE";
+export const AVAILABLE_DAYS = "AVAILABLE_DAYS";
+export const CITIES = "CITIES";
+export const USER_TYPE_ID = "USER_TYPE_ID";

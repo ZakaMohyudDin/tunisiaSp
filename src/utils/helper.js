@@ -19,7 +19,6 @@ export const validateEmail = (email) => {
 };
 
 export const notificationFarmater = (notifications) => {
-  console.log('sent_notifcations', notifications);
   const endOfWeek = moment().endOf("week");
   const currentDate = moment(); // Get the current date
   const sevenDaysAgo = currentDate.subtract(7, "days");
@@ -34,7 +33,7 @@ export const notificationFarmater = (notifications) => {
   var weekNotification = notifications.filter((item) =>
     moment(item.createdAt).isBetween(sevenDaysAgo, endOfWeek, null, "[]")
   );
-  //console.log('weeeeeek', weekNotification);
+
   var notification = [
     {
       isLongPress: false,
@@ -89,3 +88,12 @@ export const policiesFarmater = (policies) => {
   }
   return farmatedPolicies;
 };
+
+
+export function generateUID() {
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+    var r = (Math.random() * 16) | 0,
+      v = c == "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
