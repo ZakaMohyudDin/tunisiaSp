@@ -1,19 +1,48 @@
-import React from 'react';
-import { ScrollView} from 'react-native';
-import {normalize} from '../../utils/helper';
+import React, { useEffect } from 'react';
+import { FlatList, ScrollView } from 'react-native';
+import { normalize } from '../../utils/helper';
 import Spacer from '../../components/Spacer';
-import {mltiLanguages} from '../../utils/multiLanguage';
-import {styles} from './styles';
+import { mltiLanguages } from '../../utils/multiLanguage';
+import { styles } from './styles';
 import Paragraph from '../../components/Paragraph';
 import Button from '../../components/Button';
 import Headers from '../../components/Headers';
-import {colors} from '../../utils/colors';
+import { colors } from '../../utils/colors';
 import Heading from '../../components/Heading';
 import ButtonReciept from '../../components/ButtonReciept';
 import Input from '../../components/Input';
 import SubHeading from '../../components/SubHeading';
+import { useDispatch, useSelector } from 'react-redux';
+import { useFocusEffect } from '@react-navigation/native';
+import { getUserProfits } from '../../redux/actions/userProfitAction';
 
-const Reciept = ({navigation}) => {
+const Reciept = ({ navigation }) => {
+
+
+  const dispatch = useDispatch();
+  const { currentUser, token } = useSelector(({ authReducer }) => authReducer);
+
+
+  const { user_profits } = useSelector(
+    ({ userProfitReducer }) => userProfitReducer
+  );
+
+
+
+
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log('requested');
+      dispatch(getUserProfits(currentUser.id));
+    }, [])
+  );
+
+  useEffect(() => {
+    console.log('user_profits', user_profits);
+  }, [user_profits]);
+
+
+
   return (
     <ScrollView
       style={{
@@ -29,7 +58,18 @@ const Reciept = ({navigation}) => {
         textAlign={"left"}
       />
       <Spacer height={normalize(4)} />
-      <ButtonReciept
+      <FlatList
+        data={user_profits}
+        renderItem={({ item, index }) => <ButtonReciept
+          onPress={() => navigation.navigate('TransactionHistory')}
+          // text={'500 ' + mltiLanguages('arabic').register}
+          item={item}
+          heading={mltiLanguages('arabic').register}
+        />}
+        keyExtractor={(item) => item.id}
+        style={{ paddingBottom: 10 }}
+      />
+      {/* <ButtonReciept
         onPress={() => navigation.navigate('TransactionHistory')}
         text={'500 ' + mltiLanguages('arabic').register}
         heading={mltiLanguages('arabic').register}
@@ -39,7 +79,7 @@ const Reciept = ({navigation}) => {
         onPress={() => navigation.navigate('TransactionHistory')}
         text={'500 ' + mltiLanguages('arabic').register}
         heading={mltiLanguages('arabic').register}
-      />
+      /> */}
       <Spacer height={normalize(8)} />
       <Paragraph
         text={

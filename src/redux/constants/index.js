@@ -21,6 +21,11 @@ export const USERS_MESSAGES = "USERS_MESSAGES";
 export const USAGE_POLICY = "USAGE_POLICY";
 export const ABOUT_US = "ABOUT_US";
 export const SERVICES = "SERVICES";
+export const ALL_SUBSCRIPTIONS = "ALL_SUBSCRIPTIONS";
+export const SUBSCRIPTIONS = "SUBSCRIPTIONS";
+export const USER_PROFITS = "USER_PROFITS";
+
+
 
 
 

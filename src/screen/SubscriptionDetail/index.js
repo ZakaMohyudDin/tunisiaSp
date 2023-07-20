@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { FlatList, View } from "react-native";
 import { colors } from "../../utils/colors";
 import Headers from "../../components/Headers";
 import { normalize } from "../../utils/helper";
@@ -10,10 +10,71 @@ import { styles } from "./styles";
 import Spacer from "../../components/Spacer";
 import { Picker } from "@react-native-picker/picker";
 import Button from "../../components/Button";
+import { useFocusEffect } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllSubscriptions } from "../../redux/actions/allSubscriptionAction";
+import moment from "moment";
 
 const SubscriptionDetail = ({ navigation }) => {
   const [selectedLanguage, setSelectedLanguage] = useState();
   const [loader, setLoader] = useState();
+  const dispatch = useDispatch();
+
+
+
+
+
+  const { user_subscriptions } = useSelector(
+    ({ allSubscriptionReducer }) => allSubscriptionReducer
+  );
+
+
+
+
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log('requested');
+      dispatch(getAllSubscriptions());
+    }, [])
+  );
+
+  useEffect(() => {
+    console.log('user_subscriptions', user_subscriptions);
+  }, [user_subscriptions]);
+
+
+
+
+  const SubscriptionItem = ({ item, index }) => (
+    <View style={styles.subscriptionBox}>
+      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <Paragraph
+          text={mltiLanguages("arabic").register}
+          color={colors.dark_gray}
+          textAlign={"left"}
+          weight={"600"}
+          fontFamily={"FontsFree-Net-URW-DIN-Arabic-1"}
+        />
+        <Paragraph text={mltiLanguages("arabic").login} />
+      </View>
+      <Spacer height={12} />
+      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <Paragraph text={mltiLanguages("arabic").register} />
+        <Paragraph
+          text={(moment(item?.Subscription?.createdAt).diff(new Date(), 'days')) + " " + mltiLanguages("arabic").day}
+          color={colors.dark_gray}
+          textAlign={"left"}
+          weight={"600"}
+          fontFamily={"FontsFree-Net-URW-DIN-Arabic-1"}
+        />
+      </View>
+    </View>
+
+  );
+
+
+
+
 
   return (
     <View
@@ -35,31 +96,17 @@ const SubscriptionDetail = ({ navigation }) => {
         fontFamily={"FontsFree-Net-URW-DIN-Arabic-1"}
       />
 
-      <View style={styles.subscriptionBox}>
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <Paragraph
-            text={mltiLanguages("arabic").register}
-            color={colors.dark_gray}
-            textAlign={"left"}
-            weight={"600"}
-            fontFamily={"FontsFree-Net-URW-DIN-Arabic-1"}
-          />
-          <Paragraph text={mltiLanguages("arabic").login} />
-        </View>
-        <Spacer height={12} />
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <Paragraph text={mltiLanguages("arabic").register} />
-          <Paragraph
-            text={"10 " + mltiLanguages("arabic").day}
-            color={colors.dark_gray}
-            textAlign={"left"}
-            weight={"600"}
-            fontFamily={"FontsFree-Net-URW-DIN-Arabic-1"}
-          />
-        </View>
-      </View>
 
-      <View style={styles.subscriptionBox}>
+      <FlatList
+        data={user_subscriptions}
+        renderItem={({ item, index }) => <SubscriptionItem item={item} index={index} />}
+        keyExtractor={(item) => item.id}
+        style={{ paddingBottom: 10 }}
+      />
+
+
+
+      {/* <View style={styles.subscriptionBox}>
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <Paragraph
             text={mltiLanguages("arabic").register}
@@ -81,7 +128,7 @@ const SubscriptionDetail = ({ navigation }) => {
             fontFamily={"FontsFree-Net-URW-DIN-Arabic-1"}
           />
         </View>
-      </View>
+      </View> */}
 
       <Spacer height={16} />
       <Paragraph text={mltiLanguages("arabic").verif_desc} textAlign={"left"} />

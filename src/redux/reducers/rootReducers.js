@@ -9,6 +9,8 @@ import usersMessagesReducer from "./usersMessagesReducer";
 import usagePolicyReducer from "./usagePolicyReducer";
 import aboutUsReducer from "./aboutUsReducer";
 import servicesReducer from "./servicesReducer";
+import allSubscriptionReducer from "./allSubscriptionReducer";
+import userProfitReducer from "./userProfitReducer";
 
 const rootReducer = combineReducers({
     authReducer,
@@ -20,7 +22,9 @@ const rootReducer = combineReducers({
     usersMessagesReducer,
     usagePolicyReducer,
     aboutUsReducer,
-    servicesReducer
+    servicesReducer,
+    allSubscriptionReducer,
+    userProfitReducer
 });
 
 export default rootReducer;

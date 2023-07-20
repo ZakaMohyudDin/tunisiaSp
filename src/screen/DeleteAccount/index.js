@@ -10,8 +10,37 @@ import { colors } from "../../utils/colors";
 import Headers from "../../components/Headers";
 import Heading from "../../components/Heading";
 import Input from "../../components/Input";
+import axios from "axios";
+import { apiUrl } from "../../utils/config";
+import { MessageError } from "../../utils/showAlerts";
+import { useSelector } from "react-redux";
 
 const DeleteAccount = ({ navigation }) => {
+  const { currentUser, token } = useSelector(({ authReducer }) => authReducer);
+
+
+
+  const _onDeletePress = () => {
+
+    // navigation.navigate("OtpScreen")
+    axios.delete(`${apiUrl}/user/${currentUser.id}`).then(
+
+      (response) => {
+        console.log(response);
+        navigation.navigate("OtpScreen")
+        if (response?.data?.status === 200) {
+          console.log('delete_response', response);
+          navigation.navigate("OtpScreen")
+        }
+      },
+      (error) => {
+        MessageError(error.response.data.message);
+
+      }
+    );
+
+  }
+
   return (
     <ScrollView
       style={{
@@ -29,15 +58,15 @@ const DeleteAccount = ({ navigation }) => {
         textAlign={"center"}
       />
       <Spacer height={normalize(6)} />
-      <Input
+      {/* <Input
         placeholder={mltiLanguages("arabic").password}
         bgColor={colors.white}
         width={normalize(90)}
         textAlign={"left"}
-      />
+      /> */}
       <Spacer height={normalize(8)} />
       <Button
-        onPress={() => navigation.navigate("OtpScreen")}
+        onPress={() => _onDeletePress()}
         // height={normalize(11)}
         width={normalize(70)}
         text={"حذف"}
