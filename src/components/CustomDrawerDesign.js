@@ -95,6 +95,25 @@ const CustomDrawerContent = ({ state, descriptors, navigation }) => {
           />
         </TouchableOpacity>
       )}
+      <TouchableOpacity
+        style={styles.drawerItem}
+        onPress={() => navigation.navigate("PaymentOptions")}
+      >
+        <Picture
+          localSource={require("../assets/icon_payment_options.png")}
+          height={normalize(5.5)}
+          width={normalize(5.5)}
+          imgColor={null}
+        />
+        <View style={{ width: normalize(3) }} />
+        <SubHeading
+          text={"Payments"}
+          fontSize={normalize(4.2)}
+          weight={"600"}
+          textAlign={"left"}
+          fontFamily={"FontsFree-Net-URW-DIN-Arabic-1"}
+        />
+      </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.drawerItem}

@@ -8,8 +8,9 @@ import { CheckBox } from "react-native-elements";
 import { normalize } from "../utils/helper";
 import Picture from "./Picture";
 import Spacer from "./Spacer";
+import moment from "moment";
 
-const SubscriptionBox = ({ text }) => {
+const SubscriptionBox = ({ text, item }) => {
   const [check4, setCheck4] = useState(false);
   return (
     <View style={styles.container}>
@@ -38,19 +39,19 @@ const SubscriptionBox = ({ text }) => {
       </View>
       <View style={{ width: normalize(60) }}>
         <SubHeading
-          text={"10" + mltiLanguages("arabic").category}
+          text={item?.Type?.typeName}
           fontFamily={"FontsFree-Net-URW-DIN-Arabic-1"}
           fontSize={normalize(4.2)}
           textAlign={"left"}
           weight={"600"}
         />
         <Spacer height={normalize(2)} />
-        <Paragraph text={mltiLanguages("arabic").verif_desc} textAlign={"left"} />
+        <Paragraph text={item?.Type?.typeDescription} textAlign={"left"} />
       </View>
 
       <View>
         <SubHeading
-          text={"10" + mltiLanguages("arabic").day}
+          text={(moment(item?.createdAt).diff(new Date(), 'days')) + " " + mltiLanguages("arabic").day}
           fontFamily={"FontsFree-Net-URW-DIN-Arabic-1"}
           fontSize={normalize(4.2)}
           weight={"600"}
@@ -65,7 +66,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
+    // alignItems: "center",
     backgroundColor: colors.white,
     margin: normalize(1),
     paddingRight: normalize(4),

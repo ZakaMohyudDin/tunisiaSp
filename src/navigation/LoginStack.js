@@ -32,6 +32,7 @@ import TutorialSP from "../screen/TutorialSP";
 import OrderScreen from "../screen/OrderScreen";
 import SubscriptionDetail from "../screen/SubscriptionDetail";
 import PasswordRecover from "../screen/passwordRecover";
+import { PaymentOptions } from "../screen/payments";
 
 const Stack = createNativeStackNavigator();
 
@@ -83,6 +84,7 @@ const LoginStack = () => {
       <Stack.Screen name="AudioCallScreen" component={AudioCallScreen} />
       <Stack.Screen name="ChatScreen" component={ChatScreen} />
       <Stack.Screen name="TransactionHistory" component={TransactionHistory} />
+      <Stack.Screen name="PaymentOptions" component={PaymentOptions} />
     </Stack.Navigator>
   );
 };
