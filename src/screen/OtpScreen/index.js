@@ -13,6 +13,8 @@ import { MessageError } from "../../utils/showAlerts";
 import { signUpUserAction } from "../../redux/actions/authAction";
 import { useDispatch } from "react-redux";
 import { multiLanguageVerify } from "../../utils/multiLanguageVerify";
+import { useSelector } from "react-redux";
+import { verifyOtpAction } from "../../redux/actions/resetPasswordAction";
 
 var firstNo;
 var secondNo;
@@ -21,6 +23,7 @@ var fourthNo;
 var fifthNo;
 
 const OtpScreen = ({ navigation, route }) => {
+  const { token, currentUser } = useSelector(({ authReducer }) => authReducer);
   const [firt, setFirst] = useState("");
   const [second, setSecond] = useState("");
   const [third, setThird] = useState("");
@@ -72,12 +75,26 @@ const OtpScreen = ({ navigation, route }) => {
   const checkOtp = () => {
     setLoader(true);
     if (route?.params?.otp == firt + second + third + fourth + fifth) {
-      navigation.navigate("PasswordRecover", {number: route?.params?.number});
+      navigation.navigate("PasswordRecover", { number: route?.params?.number });
     } else {
       MessageError("Please, Enter a Valid OTP");
       setLoader(false);
     }
   };
+
+  const verifyOtp = () => {
+    if (!firt || !second || !third || !fourth || !fifth) {
+      MessageError("Please! Enter Your Complete OTP")
+    }
+    var data = {
+      userMobile: currentUser.userMobile,
+      otp: firt + second + third + fourth + fifth
+    }
+    dispatch(verifyOtpAction(token, data, () => {
+      navigation.navigate("ChangePassword")
+    }))
+    console.log("res running token");
+  }
 
   return (
     <ScrollView
@@ -214,7 +231,7 @@ const OtpScreen = ({ navigation, route }) => {
           <Paragraph
             text={multiLanguageVerify("arabic").verif_text + "؟"}
             textAlign={"center"}
-            // color={colors.}
+          // color={colors.}
           />
           <View style={{ width: 10 }} />
           <Paragraph
@@ -228,7 +245,7 @@ const OtpScreen = ({ navigation, route }) => {
       <Spacer height={normalize(4)} />
       <Button
         // onPress={() => signUpUser()}
-        onPress={() => checkOtp()}
+        onPress={() => token ? verifyOtp() : checkOtp()}
         height={normalize(11)}
         width={normalize(50)}
         text={multiLanguageVerify("arabic").verify}

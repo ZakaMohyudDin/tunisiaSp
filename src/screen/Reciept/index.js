@@ -32,14 +32,9 @@ const Reciept = ({ navigation }) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      console.log('requested');
       dispatch(getUserProfits(currentUser.id));
     }, [])
   );
-
-  useEffect(() => {
-    console.log('user_profits', user_profits);
-  }, [user_profits]);
 
 
 
@@ -58,28 +53,17 @@ const Reciept = ({ navigation }) => {
         textAlign={"left"}
       />
       <Spacer height={normalize(4)} />
-      <FlatList
-        data={user_profits}
-        renderItem={({ item, index }) => <ButtonReciept
-          onPress={() => navigation.navigate('TransactionHistory')}
-          // text={'500 ' + mltiLanguages('arabic').register}
-          item={item}
-          heading={mltiLanguages('arabic').register}
-        />}
-        keyExtractor={(item) => item.id}
-        style={{ paddingBottom: 10 }}
-      />
-      {/* <ButtonReciept
-        onPress={() => navigation.navigate('TransactionHistory')}
-        text={'500 ' + mltiLanguages('arabic').register}
+      <ButtonReciept
+        onPress={() => navigation.navigate('TransactionHistory', { confirmed: false })}
+        text={(user_profits.noConfirmedProfit || "0") + " " + mltiLanguages('arabic').register}
         heading={mltiLanguages('arabic').register}
       />
       <Spacer height={normalize(5)} />
       <ButtonReciept
-        onPress={() => navigation.navigate('TransactionHistory')}
-        text={'500 ' + mltiLanguages('arabic').register}
+        onPress={() => navigation.navigate('TransactionHistory', { confirmed: true })}
+        text={(user_profits.confirmedProfit || "0") + " " + mltiLanguages('arabic').register}
         heading={mltiLanguages('arabic').register}
-      /> */}
+      />
       <Spacer height={normalize(8)} />
       <Paragraph
         text={

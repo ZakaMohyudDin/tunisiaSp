@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { USER, TOKEN } from "../../redux/constants"
 import { ScrollView, View } from "react-native";
 import { normalize } from "../../utils/helper";
 import Spacer from "../../components/Spacer";
@@ -11,13 +12,34 @@ import SubHeading from "../../components/SubHeading";
 import Picture from "../../components/Picture";
 import { Switch } from "react-native-elements";
 import SettingComponent from "../../components/SettingComponent";
+import { useDispatch, useSelector } from "react-redux";
+import { sendOtpAction } from "../../redux/actions/resetPasswordAction";
 
 const Setting = ({ navigation }) => {
+  const dispatch = useDispatch()
+  const { token, currentUser } = useSelector(
+    ({ authReducer }) => authReducer
+  );
   const [checked, setChecked] = useState(false);
 
   const toggleSwitch = () => {
     setChecked(!checked);
   };
+
+  const logOutUser = () => {
+    dispatch({ type: USER, data: null });
+    dispatch({ type: TOKEN, data: null });
+  }
+
+  const sendOtp = () => {
+    var data = {
+      userMobile: currentUser.userMobile
+    }
+    dispatch(sendOtpAction(token, data, () => {
+      navigation.navigate("OtpScreen")
+    }))
+  }
+
   return (
     <ScrollView
       style={{
@@ -27,6 +49,7 @@ const Setting = ({ navigation }) => {
       }}
     >
       <Headers openDrawer={() => navigation.openDrawer()} />
+      {console.log("\n\n currentUser", currentUser)}
       <Spacer height={normalize(4)} />
       <SubHeading
         fontFamily={"FontsFree-Net-URW-DIN-Arabic-1"}
@@ -81,7 +104,7 @@ const Setting = ({ navigation }) => {
       <SettingComponent
         text={mltiLanguages("arabic").register}
         contact={"+03039393393"}
-        onPress={() => navigation.navigate("ChangePassword")}
+        onPress={() => sendOtp()}
         img={require("../../assets/password.png")}
       />
       <Spacer height={normalize(4)} />
@@ -128,6 +151,7 @@ const Setting = ({ navigation }) => {
         text={mltiLanguages("arabic").register}
         contact={"+03039393393"}
         img={require("../../assets/exit.png")}
+        onPress={() => logOutUser()}
       />
     </ScrollView>
   );
