@@ -9,6 +9,7 @@ import Picture from "../Picture";
 import Paragraph from "../Paragraph";
 import { normalize } from "../../utils/helper";
 import { useDispatch, useSelector } from "react-redux";
+import Button from "../Button";
 
 var Data = [
   {
@@ -36,7 +37,7 @@ var Data = [
     image: require("../../assets/person2.png")
   },
 ];
-const StepInitial = ({ text }) => {
+const StepInitial = ({ text, onNextPress}) => {
   const dispatch = useDispatch();
   const { token } = useSelector(({ authReducer }) => authReducer);
   const [categoryData, setCategoryData] = useState(Data);
@@ -98,6 +99,28 @@ const StepInitial = ({ text }) => {
         renderItem={({ item, index }) => <Item item={item} index={index} />}
         keyExtractor={(item) => item.id}
       />
+      <View style={styles.btnContainers}>
+        <Button
+          onPress={onNextPress}
+          height={50}
+          width={100}
+          text={mltiLanguages("arabic").profile}
+          gradiantFirst={colors.primary_color}
+          gradiantSecond={colors.primary_color}
+        //   loader={loader}
+        />
+
+        <Button
+          // onPress={onPrePress}
+          height={50}
+          width={100}
+          text={mltiLanguages("arabic").profile}
+          textColor={colors.dark_gray}
+          gradiantFirst={"#EAE4FB"}
+          gradiantSecond={"#EAE4FB"}
+        //   loader={loader}
+        />
+      </View>
     </View>
   );
 };
@@ -120,6 +143,12 @@ const styles = StyleSheet.create({
     marginHorizontal: normalize(3),
     borderRadius: normalize(2),
     justifyContent: "space-between",
-    
+
+  },
+  btnContainers: {
+    flexDirection: "row",
+    marginTop: normalize(10),
+    marginBottom: normalize(4),
+    justifyContent: "space-between",
   },
 });

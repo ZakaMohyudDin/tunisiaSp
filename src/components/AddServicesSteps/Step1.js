@@ -28,7 +28,6 @@ const Step1 = ({
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.pick}>
-        {console.log("\n\n\n\n ==> in : ", serviceTypesList)}
         <Picker
           selectedValue={selectedService}
           onValueChange={setSelectedService}

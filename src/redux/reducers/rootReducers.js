@@ -11,6 +11,7 @@ import aboutUsReducer from "./aboutUsReducer";
 import servicesReducer from "./servicesReducer";
 import allSubscriptionReducer from "./allSubscriptionReducer";
 import userProfitReducer from "./userProfitReducer";
+import chatReducer from "./chatReducer";
 
 const rootReducer = combineReducers({
     authReducer,
@@ -24,7 +25,8 @@ const rootReducer = combineReducers({
     aboutUsReducer,
     servicesReducer,
     allSubscriptionReducer,
-    userProfitReducer
+    userProfitReducer,
+    chatReducer,
 });
 
 export default rootReducer;

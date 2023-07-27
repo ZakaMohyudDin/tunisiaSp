@@ -31,3 +31,6 @@ export const AVAILABLE_DAYS = "AVAILABLE_DAYS";
 export const CITIES = "CITIES";
 export const USER_TYPE_ID = "USER_TYPE_ID";
 export const TRAINING_SERVICE = "TRAINING_SERVICE";
+export const CONTACTS_LIST = "CONTACTS_LIST";
+export const CHAT_MEMBERS = "TRAINING_SERVICE";
+export const MY_CHAT = "MY_CHAT";

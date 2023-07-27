@@ -190,6 +190,7 @@ export function createAvailableDaysActiopn(token, data, callback) {
       })
       .then(
         (response) => {
+          console.log("\n\n\n days : ", response.data.result)
           if (response?.data?.status === 201) {
             callback();
           }
@@ -257,7 +258,7 @@ export function updateServiceAction(token, data, id, callback) {
       })
       .then(
         (response) => {
-          console.log("\n\n res 1 : ", response?.data);
+          console.log("\n\n res 133 : ", response?.data);
           if (response?.data?.status === 201) {
             callback();
           }

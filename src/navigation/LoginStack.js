@@ -43,8 +43,8 @@ const LoginStack = () => {
         headerShown: false,
       }}
     >
-      <Stack.Screen name="PaymentOptions" component={PaymentOptions} />
       <Stack.Screen name="ServiceType" component={ServiceType} />
+      <Stack.Screen name="PaymentOptions" component={PaymentOptions} />
       <Stack.Screen name="TopTab" component={TopTab} />
       <Stack.Screen name="PasswordRecover" component={PasswordRecover} />
       <Stack.Screen name="OtpScreen" component={OtpScreen} />

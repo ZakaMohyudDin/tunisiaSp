@@ -5,28 +5,56 @@ import { Picker } from "@react-native-picker/picker";
 import { normalize } from "react-native-elements";
 import Input from "../Input";
 import { mltiLanguages } from "../../utils/multiLanguage";
-import SubHeading from "../SubHeading";
+import Button from "../Button";
+import { useDispatch, useSelector } from "react-redux";
 
-const StepTutorial1 = ({ text }) => {
-  const [selectedLanguage, setSelectedLanguage] = useState();
+const StepTutorial1 = ({
+  text,
+  serviceTypes,
+  onNextPress,
+  onPrePress,
+  shortDesc,
+  setShortDesc,
+  longDesc,
+  setLongDesc,
+  experiance,
+  setExperiance,
+  selectedService,
+  setSelectedService,
+}) => {
+  const { serviceTypesList } = useSelector(
+    ({ serviceReducer }) => serviceReducer
+  );
   return (
-    <View>
-      <SubHeading
-        text={mltiLanguages("arabic").phone}
-        fontSize={16}
-        weight={"600"}
-        textAlign={"right"}
-        fontFamily={"FontsFree-Net-URW-DIN-Arabic-1"}
-      />
-
+    <View style={{ flex: 1 }}>
+      <View style={styles.pick}>
+        <Picker
+          selectedValue={selectedService}
+          onValueChange={setSelectedService}
+        >
+          {serviceTypesList?.map((service) => (
+            <Picker.Item label={service.serviceTypeName} value={service.id} />
+          ))}
+        </Picker>
+      </View>
       <Input
         bgColor={colors.white}
+        text={experiance}
+        onChangeText={setExperiance}
+        width={"100%"}
+        placeholder={mltiLanguages("arabic").phone}
+        margin={normalize(6)}
+      />
+      <Input
+        bgColor={colors.white}
+        text={shortDesc}
+        onChangeText={setShortDesc}
         width={"100%"}
         margin={normalize(6)}
         placeholder={mltiLanguages("arabic").phone}
       />
 
-      <Input
+      {/* <Input
         bgColor={colors.white}
         width={"100%"}
         placeholder={mltiLanguages("arabic").phone}
@@ -37,9 +65,11 @@ const StepTutorial1 = ({ text }) => {
         width={"100%"}
         placeholder={mltiLanguages("arabic").phone}
         margin={normalize(6)}
-      />
+      /> */}
       <Input
         bgColor={colors.white}
+        text={longDesc}
+        onChangeText={setLongDesc}
         width={"100%"}
         placeholder={mltiLanguages("arabic").phone}
         multiLine={true}
@@ -48,6 +78,29 @@ const StepTutorial1 = ({ text }) => {
         numberOfLines={4}
         margin={normalize(6)}
       />
+
+      <View style={styles.btnContainers}>
+        <Button
+          onPress={onNextPress}
+          height={50}
+          width={100}
+          text={mltiLanguages("arabic").profile}
+          gradiantFirst={colors.primary_color}
+          gradiantSecond={colors.primary_color}
+          //   loader={loader}
+        />
+
+        <Button
+          onPress={onPrePress}
+          height={50}
+          width={100}
+          text={mltiLanguages("arabic").profile}
+          textColor={colors.dark_gray}
+          gradiantFirst={"#EAE4FB"}
+          gradiantSecond={"#EAE4FB"}
+          //   loader={loader}
+        />
+      </View>
     </View>
   );
 };
@@ -62,5 +115,11 @@ const styles = StyleSheet.create({
   },
   btnContainer: {
     flexDirection: "row",
+  },
+  btnContainers: {
+    flexDirection: "row",
+    marginTop: normalize(10),
+    marginBottom: normalize(4),
+    justifyContent: "space-between",
   },
 });
