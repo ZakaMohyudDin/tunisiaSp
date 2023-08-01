@@ -1,7 +1,8 @@
-import { ALL_SUBSCRIPTIONS, USER_PROFITS } from "../constants";
+import { USER_PROFITS, PROFIT_HISTORY } from "../constants";
 
 let initialState = {
     user_profits: null,
+    profitHistory: null
 };
 
 export default (state = initialState, action) => {
@@ -10,6 +11,11 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 user_profits: action.data,
+            };
+        case PROFIT_HISTORY:
+            return {
+                ...state,
+                profitHistory: action.data,
             };
         default:
             return state;

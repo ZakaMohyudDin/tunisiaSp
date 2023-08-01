@@ -44,6 +44,7 @@ const LoginStack = () => {
       }}
     >
       <Stack.Screen name="ServiceType" component={ServiceType} />
+      <Stack.Screen name="PaymentOptions" component={PaymentOptions} />
       <Stack.Screen name="TopTab" component={TopTab} />
       <Stack.Screen name="PasswordRecover" component={PasswordRecover} />
       <Stack.Screen name="OtpScreen" component={OtpScreen} />
@@ -84,7 +85,6 @@ const LoginStack = () => {
       <Stack.Screen name="AudioCallScreen" component={AudioCallScreen} />
       <Stack.Screen name="ChatScreen" component={ChatScreen} />
       <Stack.Screen name="TransactionHistory" component={TransactionHistory} />
-      <Stack.Screen name="PaymentOptions" component={PaymentOptions} />
     </Stack.Navigator>
   );
 };

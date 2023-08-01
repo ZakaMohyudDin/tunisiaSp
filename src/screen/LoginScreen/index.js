@@ -45,7 +45,7 @@ const LoginScreen = ({ navigation }) => {
       signInUserAction(
         data,
         () => {
-          navigation.replace("TopTab");
+          navigation.replace("ServiceType");
         },
         () => {
           setLoader(false);

@@ -5,7 +5,7 @@ import { normalize } from "../utils/helper";
 import Paragraph from "./Paragraph";
 import Picture from "./Picture";
 
-const ButtonReciept = ({ heading, text, onPress, item }) => {
+const ButtonReciept = ({ heading, text, onPress }) => {
   return (
     <View style={styles.container}>
       <Paragraph
@@ -15,19 +15,10 @@ const ButtonReciept = ({ heading, text, onPress, item }) => {
         color={colors.dark_gray}
       />
       <View style={{ flexDirection: "row", alignItems: 'center' }}>
-        <View >
-          <View style={{ flexDirection: 'row' }}>
-            <Paragraph text={"Not Confirmed "} fontSize={normalize(3.8)} />
-            <Paragraph text={item.userProfitsNoConfirmed} fontSize={normalize(3.8)} />
-          </View>
-          <View style={{ flexDirection: 'row' }}>
-            <Paragraph text={"Confirmed "} fontSize={normalize(3.8)} />
-            <Paragraph text={item.userProfitsConfirmed} fontSize={normalize(3.8)} />
-          </View>
-        </View>
+        <Paragraph text={text} fontSize={normalize(3.8)} />
         <TouchableOpacity
           onPress={onPress}
-          style={{ marginLeft: normalize(5), }}
+          style={{ marginLeft: normalize(5),  }}
         >
           <Picture
             localSource={require("../assets/next.png")}
@@ -50,9 +41,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    alignSelf: 'center',
+    alignSelf:'center',
     paddingHorizontal: normalize(4),
     borderRadius: normalize(2),
-    marginBottom: 10
   },
 });

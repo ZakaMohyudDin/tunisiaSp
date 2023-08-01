@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   TextInput,
+  Button,
   FlatList,
   StyleSheet,
   Text,
@@ -18,7 +19,13 @@ import ImagePicker from "react-native-image-crop-picker";
 import { launchCamera } from "react-native-image-picker";
 import ModalImage from "../../components/ModalImage";
 import VideoPlayer from "react-native-video-player";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  sendMessageAction,
+  getConversationAction,
+  sendUserMessageAction,
+} from "../../redux/actions/chatAction";
+import { MessageError, MessageInfo } from "../../utils/showAlerts";
 
 let options = {
   mediaType: "video",
@@ -32,14 +39,73 @@ let optionsPick = {
 };
 const ChatScreen = ({ navigation, route }) => {
   const { isDor } = useSelector(({ serviceReducer }) => serviceReducer);
+  const { token, currentUser } = useSelector(({ authReducer }) => authReducer);
+  const { myChatList } = useSelector(({ chatReducer }) => chatReducer);
+  const dispatch = useDispatch();
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState(myChatList);
   const [showAction, setShowAction] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [imgModal, setImgModal] = useState(false);
   const [videoModal, setVideoModal] = useState(false);
   const [imgUrl, setImgUrl] = useState("");
-  const [chatUser, setChatUser] = useState(route.params.chatUser);
+
+  useEffect(() => {
+    dispatch(getConversationAction(token, route?.params?.chatUser.userMessageUserId));
+  }, []);
+
+  const sendChat = (val, url) => {
+    if (!message) {
+      MessageError("Please Enter Your Message!");
+      return;
+    }
+    var userData = {};
+    if (myChatList) {
+      var index = myChatList.length - 1
+      userData = {
+        userMessageText: message,
+        userMessageUnread: "true",
+        userMessageUnreadNumber: "4",
+        userMessageLast: myChatList[index]?.id,
+        userMessageUserId: currentUser.id,
+        userMessageProviderId: route?.params?.chatUser?.userMessageProviderId,
+      };
+    } else {
+      userData = {
+        userMessageText: message,
+        userMessageUnread: "true",
+        userMessageUnreadNumber: "4",
+        userMessageProviderId: route?.params?.chatUser?.userMessageProviderId,
+      };
+    }
+    dispatch(
+      sendUserMessageAction(token, userData, (res) => {
+        var data = {
+          messageConversationValue: message,
+          messageConversationSender: currentUser.id,
+          userMessageId: res,
+          conversationType: "text",
+        };
+        dispatch(
+          sendMessageAction(token, data, () => {
+            if (message.trim() !== "") {
+              var newMessage;
+              newMessage = {
+                id: Math.random().toString(),
+                sender: true,
+                img: false,
+                imgUri: "",
+                text: message,
+              };
+              console.log("\n\n\n\n\n\n ===>> send SMS....")
+              setMessages((prevMessages) => [...prevMessages, newMessage]);
+              setMessage("");
+            }
+          })
+        );
+      })
+    );
+  };
 
   const handleSend = (val, url) => {
     if (val == "img") {
@@ -94,6 +160,7 @@ const ChatScreen = ({ navigation, route }) => {
     ImagePicker.openPicker({
       multiple: true,
     }).then((images) => {
+      console.log(images);
       setImgUrl(images[0].path);
       handleSend("img", images[0].path);
     });
@@ -103,6 +170,7 @@ const ChatScreen = ({ navigation, route }) => {
     ImagePicker.openPicker({
       mediaType: "video",
     }).then((video) => {
+      console.log(video.path);
       setVideo(video.path);
     });
   };
@@ -135,7 +203,7 @@ const ChatScreen = ({ navigation, route }) => {
             text={"Sun, 14:34"}
             fontSize={normalize(2)}
             textAlign={item.sender ? "right" : "left"}
-          // color={colors.dark_gray}
+            // color={colors.dark_gray}
           />
         </View>
         {item.img && (
@@ -180,7 +248,7 @@ const ChatScreen = ({ navigation, route }) => {
               {
                 backgroundColor: item.sender
                   ? colors.primary_color
-                  : colors.white,
+                  : colors.sub_background,
                 alignSelf: item.sender ? "flex-end" : "flex-start",
                 marginLeft: item.sender ? 0 : normalize(6),
                 marginRight: item.sender ? normalize(6) : 0,
@@ -190,7 +258,7 @@ const ChatScreen = ({ navigation, route }) => {
             <Text
               style={[
                 styles.messageText,
-                { color: item.sender && colors.white },
+                { color: item.sender && colors.sub_background },
               ]}
             >
               {item.text}
@@ -221,7 +289,7 @@ const ChatScreen = ({ navigation, route }) => {
           </View>
         )}
 
-        {index == 0 && (
+        {/* {index == 0 && (
           <View
             style={{
               width: normalize(70),
@@ -238,10 +306,10 @@ const ChatScreen = ({ navigation, route }) => {
               videoWidth={500}
               videoHeight={300}
               thumbnail={require("../../assets/add1.png")}
-            // Other video player props
+              // Other video player props
             />
           </View>
-        )}
+        )} */}
 
         <View
           style={{
@@ -272,6 +340,7 @@ const ChatScreen = ({ navigation, route }) => {
             alignItems: "center",
           }}
         >
+          {console.log("currentUser Id", currentUser.id)}
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Picture
               localSource={require("../../assets/backArrow.png")}
@@ -300,11 +369,14 @@ const ChatScreen = ({ navigation, route }) => {
           >
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Paragraph
-                text={chatUser.User.userName}
+                text={route?.params?.chatUser.serviceProvider?.userName}
                 color={colors.dark_gray}
               />
               <View style={{ width: 4 }} />
-              <Paragraph text={"(online)"} fontSize={normalize(3)} />
+              <Paragraph
+                text={route?.params?.chatUser.isActive ? "(online)" : "(OffLine)"}
+                fontSize={normalize(3)}
+              />
             </View>
           </TouchableOpacity>
         </View>
@@ -316,7 +388,17 @@ const ChatScreen = ({ navigation, route }) => {
             justifyContent: "space-between",
           }}
         >
-          <TouchableOpacity onPress={() => navigation.navigate("OrderScreen")}>
+          <TouchableOpacity
+            onPress={() =>
+              isDor.isRemote
+                ? navigation.navigate("SendOffer", {
+                    item: route?.params?.item,
+                  })
+                : navigation.navigate("SendOfferDorToDor", {
+                    item: route?.params?.item,
+                  })
+            }
+          >
             <Picture
               localSource={require("../../assets/handshake.png")}
               height={normalize(5)}
@@ -376,7 +458,7 @@ const ChatScreen = ({ navigation, route }) => {
           textAlign={"left"}
           onChangeText={setMessage}
         />
-        <TouchableOpacity onPress={() => handleSend("text", "")}>
+        <TouchableOpacity onPress={() => sendChat("text", "")}>
           <Text style={{ color: colors.light1_gray }}>Send</Text>
         </TouchableOpacity>
       </View>
@@ -396,9 +478,9 @@ const ChatScreen = ({ navigation, route }) => {
             imgHeight={normalize(7)}
             imgWidth={normalize(7)}
           />
-          {isDor ? (
+          {isDor.isRemote ? (
             <ButtonSqure
-              img={require("../../assets/location.png")}
+              img={require("../../assets/fileFolder.png")}
               text={mltiLanguages("arabic").verify}
               onPress={() => console.log("hhhhh")}
               imgHeight={normalize(16)}
@@ -406,7 +488,7 @@ const ChatScreen = ({ navigation, route }) => {
             />
           ) : (
             <ButtonSqure
-              img={require("../../assets/fileFolder.png")}
+              img={require("../../assets/location.png")}
               text={mltiLanguages("arabic").verify}
               onPress={() => console.log("hhhhh")}
               imgHeight={normalize(16)}
@@ -420,7 +502,7 @@ const ChatScreen = ({ navigation, route }) => {
           />
         </View>
       )}
-
+{console.log("\n\n\n\n ==> userMessageUserId ", myChatList)}
       <ModalRecording
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
@@ -481,7 +563,7 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     width: normalize(94),
     alignSelf: "center",
-    backgroundColor: colors.white,
+    backgroundColor: colors.sub_background,
     borderRadius: 10,
     marginBottom: normalize(4),
   },
@@ -490,7 +572,7 @@ const styles = StyleSheet.create({
     height: 40,
     paddingHorizontal: 8,
     marginHorizontal: 8,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: colors.sub_background,
     marginRight: 8,
     borderRadius: 8,
     textAlign: "right",
@@ -499,7 +581,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: -normalize(2.5),
     left: -normalize(3),
-    borderColor: colors.white,
+    borderColor: colors.sub_background,
     borderWidth: 1,
     borderRadius: 70,
     // shadowColor: "#000",
@@ -516,7 +598,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: -normalize(2.5),
     right: -normalize(3),
-    borderColor: colors.white,
+    borderColor: colors.sub_background,
     borderWidth: 1,
     borderRadius: 70,
     // shadowColor: "#000",

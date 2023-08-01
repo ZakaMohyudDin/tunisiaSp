@@ -40,6 +40,7 @@ export function signInUserAction(data, callback, stopLoading) {
   return async (dispatch) => {
     axios.post(`${apiUrl}/auth/login`, data).then(
       (response) => {
+        console.log("\n\n\n\n ===> res : ", response)
         if (response?.data?.status === 200) {
           dispatch({ type: USER, data: response?.data?.result[0] });
           dispatch({ type: TOKEN, data: response?.data?.access_token });

@@ -9,6 +9,7 @@ import Picture from "../../components/Picture";
 import { colors } from "../../utils/colors";
 import SubHeading from "../../components/SubHeading";
 import Paragraph from "../../components/Paragraph";
+import { useDispatch, useSelector } from 'react-redux';
 
 const Data = [
   {
@@ -37,7 +38,10 @@ const Data = [
   },
 ];
 
-const TransactionHistory = ({ navigation }) => {
+const TransactionHistory = ({ navigation, route }) => {
+  const { profitHistory } = useSelector(
+    ({ userProfitReducer }) => userProfitReducer
+  );
   const Item = ({ item }) => (
     <View style={styles.item}>
       <Picture
@@ -67,7 +71,7 @@ const TransactionHistory = ({ navigation }) => {
         />
         <Spacer height={normalize(1)} />
         <Paragraph
-          text={"200 " + mltiLanguages("arabic").day}
+          text={(route?.params?.confirmed ? item?.userProfitsConfirmed : item.userProfitsNoConfirmed) + " " + "دینار"}
           // fontSize={normalize(3)}
           textAlign={"center"}
           color={colors.primary_color}
@@ -101,7 +105,7 @@ const TransactionHistory = ({ navigation }) => {
       </View>
       <Spacer height={normalize(2)} />
       <FlatList
-        data={Data}
+        data={profitHistory}
         // numColumns={1}
         renderItem={({ item }) => <Item item={item} />}
         keyExtractor={(item) => item.id}

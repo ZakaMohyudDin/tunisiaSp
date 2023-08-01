@@ -11,7 +11,7 @@ import ModalImage from "../ModalImage";
 import { launchCamera } from "react-native-image-picker";
 import Button from "../Button";
 import AWS from "aws-sdk";
-import RNFetchBlob from "react-native-fetch-blob";
+import RNFetchBlob from "rn-fetch-blob";
 
 let options = {
   mediaType: "video",
@@ -101,7 +101,7 @@ const Step3 = ({ text, onNextPress, onPrePress, setVideoUrl }) => {
           text={mltiLanguages("arabic").profile}
           gradiantFirst={colors.primary_color}
           gradiantSecond={colors.primary_color}
-          //   loader={loader}
+        //   loader={loader}
         />
 
         <Button
@@ -112,7 +112,7 @@ const Step3 = ({ text, onNextPress, onPrePress, setVideoUrl }) => {
           textColor={colors.dark_gray}
           gradiantFirst={"#EAE4FB"}
           gradiantSecond={"#EAE4FB"}
-          //   loader={loader}
+        //   loader={loader}
         />
       </View>
     </View>

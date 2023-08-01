@@ -87,7 +87,7 @@ const CustomDrawerContent = ({ state, descriptors, navigation }) => {
           />
           <View style={{ width: normalize(3) }} />
           <SubHeading
-            text={"Amount"}
+            text={"Profit"}
             fontSize={normalize(4.2)}
             weight={"600"}
             textAlign={"left"}
@@ -239,7 +239,7 @@ const CustomDrawerContent = ({ state, descriptors, navigation }) => {
         />
       </TouchableOpacity>
 
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={styles.drawerItem}
         onPress={() => logOutUser()}
       >
@@ -257,7 +257,7 @@ const CustomDrawerContent = ({ state, descriptors, navigation }) => {
           textAlign={"left"}
           fontFamily={"FontsFree-Net-URW-DIN-Arabic-1"}
         />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 };

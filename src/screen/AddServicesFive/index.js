@@ -18,6 +18,7 @@ import StepInitial from "../../components/AddServicesSteps/StepInitial";
 
 const AddServicesFive = ({ navigation }) => {
   const [screenNo, setScreenNo] = useState(0);
+  const [loader, setLoader] = useState(0);
 
   const labels = ["", "", "", "", ""];
   const customStyles = {
@@ -44,16 +45,36 @@ const AddServicesFive = ({ navigation }) => {
     currentStepLabelColor: colors.primary_color,
   };
 
+
   const nextScreen = () => {
-    if (screenNo >= 4) {
-      navigation.navigate("Subscription")
-      return};
-    setScreenNo(screenNo + 1);
+    setLoader(true);
+    if (screenNo == 0) {
+      setScreenNo(screenNo + 1);
+    }
+    else if (screenNo == 1) {
+      createServiceForFirst();
+    } else if (screenNo == 2) {
+      createAvailableTime();
+    } else {
+      if (screenNo >= 4) {
+        finalServiceUpdate();
+        return;
+      }
+      setScreenNo(screenNo + 1);
+      setLoader(false);
+    }
   };
   const preScreen = () => {
     if (screenNo <= 0) return;
     setScreenNo(screenNo - 1);
   };
+
+  // const nextScreen = () => {
+  //   if (screenNo >= 4) {
+  //     navigation.navigate("Subscription")
+  //     return};
+  //   setScreenNo(screenNo + 1);
+  // };
   return (
     <ScrollView
       style={{
@@ -84,13 +105,13 @@ const AddServicesFive = ({ navigation }) => {
         stepCount={5}
       />
 
-      {screenNo == 0 && <StepInitial text={"nnnnnnn"} />}
-      {screenNo == 1 && <Step1 text={"nnnnnnn"} />}
-      {screenNo == 2 && <Step2 text={"nnnnnnn"} />}
-      {screenNo == 3 && <Step3 text={"nnnnnnn"} />}
-      {screenNo == 4 && <Step4 text={"nnnnnnn"} />}
+      {screenNo == 0 && <StepInitial onNextPress={() => nextScreen()} text={"nnnnnnn"} />}
+      {screenNo == 1 && <Step1 onNextPress={() => nextScreen()} text={"nnnnnnn"} />}
+      {screenNo == 2 && <Step2 onNextPress={() => nextScreen()} text={"nnnnnnn"} />}
+      {screenNo == 3 && <Step3 onNextPress={() => nextScreen()} text={"nnnnnnn"} />}
+      {screenNo == 4 && <Step4 onNextPress={() => nextScreen()} text={"nnnnnnn"} />}
 
-      <View style={styles.btnContainer}>
+      {/* <View style={styles.btnContainer}>
         <Button
           onPress={() => nextScreen()}
           // height={normalize(11)}
@@ -98,7 +119,7 @@ const AddServicesFive = ({ navigation }) => {
           text={mltiLanguages("arabic").profile}
           gradiantFirst={colors.primary_color}
           gradiantSecond={colors.primary_color}
-          //   loader={loader}
+        //   loader={loader}
         />
 
         {screenNo !== 0 && (
@@ -109,10 +130,10 @@ const AddServicesFive = ({ navigation }) => {
             text={mltiLanguages("arabic").profile}
             gradiantFirst={"#EAE4FB"}
             gradiantSecond={"#EAE4FB"}
-            //   loader={loader}
+          //   loader={loader}
           />
         )}
-      </View>
+      </View> */}
     </ScrollView>
   );
 };

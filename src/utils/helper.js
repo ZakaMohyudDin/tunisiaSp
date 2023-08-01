@@ -97,3 +97,19 @@ export function generateUID() {
     return v.toString(16);
   });
 }
+
+export const orderFarmater = (orders) => {
+  console.log("\n\n\n farmated ... start ", orders);
+  var farmaterOrders = [];
+  for (let i = 0; i < orders.length; i++) {
+    var obj = {
+      isLongPress: false,
+      width: 85,
+      padding: 2,
+      opacity: 0.99,
+    };
+    var finalObj = Object.assign({}, obj, orders[i]);
+    farmaterOrders.push(finalObj);
+  }
+  console.log("\n\n\n\n ==> farmated Orders : ", farmaterOrders);
+};
